@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex">
+  <title>【試験対策】携帯獣系統分類学</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --accent: #22d3ee;
+      --accent-2: #f59e0b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --shadow: 0 12px 30px rgba(0,0,0,0.35);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(34,211,238,0.14), transparent 40%),
+                  radial-gradient(circle at 80% 10%, rgba(245,158,11,0.12), transparent 42%),
+                  radial-gradient(circle at 30% 80%, rgba(59,130,246,0.12), transparent 38%),
+                  var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    .app {
+      width: min(1080px, 100%);
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      backdrop-filter: blur(10px);
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      letter-spacing: 0.02em;
+    }
+    .subtitle {
+      margin: 6px 0 0;
+      color: #e5e7eb;
+      font-size: 20px;
+    }
+    .subtitle a {
+      color: #22d3ee;
+      text-decoration: none;
+      font-weight: 700;
+      transition: opacity 0.2s ease;
+    }
+    .subtitle a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+    .regions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 25px;
+    }
+    .btn {
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.75);
+      border-radius: 12px;
+      padding: 21px 16px;
+      font-weight: 700;
+      font-size: 22px;
+      color: #0b1021;
+      background: linear-gradient(135deg, var(--accent), #5daacd);
+      box-shadow: 0 12px 30px rgba(34,211,238,0.35);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+    .btn.secondary {
+      color: var(--text);
+      background: linear-gradient(135deg, #1f2937, #111827);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
+    }
+    .btn.secondary.active {
+      background: #e5e7eb;
+      color: #0b1021;
+      box-shadow: 0 4px 14px rgba(255,255,255,0.3);
+    }
+    #prev-btn {
+      background: linear-gradient(135deg, #5daacd, #22d3ee);
+      color: #0b1021;
+      box-shadow: 0 12px 30px rgba(34,211,238,0.35);
+    }
+    .btn[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .panel {
+      margin-top: 20px;
+      background: #0b1220;
+      border: 1px solid #808080;
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .image-area {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+    .frame {
+      position: relative;
+      border-radius: 16px;
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      max-width: 500px;
+      max-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .frame img {
+      max-width: 100%;
+      max-height: 450px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,0.45));
+    }
+    .placeholder {
+      color: var(--muted);
+      font-size: 23px;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-left: -70px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(34,211,238,0.14);
+      color: var(--text);
+      font-weight: 700;
+      width: fit-content;
+      font-size: 24px;
+      margin-top:16px;
+    }
+    .name-box {
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid #808080;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      font-size: 32px;
+      margin-top: 25px;
+      width: 100%;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+    .controls .btn {
+      flex: 1;
+      font-size: 26px;
+    }
+    .status {
+      color: #e5e7eb;
+      font-size: 20px;
+      white-space: pre-wrap;
+    }
+    .panel > strong {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      .app { padding: 20px; }
+      .image-area { grid-template-columns: 1fr; }
+      .frame { min-height: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>タマムシ大学 携帯獣学部<br>携帯獣系統分類学　試験対策</h1>
+        <p class="subtitle">地方を選択 → 名前を確認 → 次へ<br>※リージョンフォーム、雌雄等の姿違いは含まれていません<br><a href="https://zukan.pokemon.co.jp/" target="_blank" rel="noopener noreferrer">ずかんはこちら</a></p>
+      </div>
+      <div class="pill" id="region-indicator">地方未選択</div>
+    </header>
+
+    <section class="panel">
+      <strong>地方を選択</strong>
+      <div class="regions" id="region-buttons"></div>
+    </section>
+
+    <section class="panel image-area" aria-live="polite">
+      <div class="frame" id="image-frame">
+        <span class="placeholder">地方を選択すると画像が表示されます</span>
+      </div>
+      <div class="info">
+        <div class="name-box" id="name-box">ここに名前が表示されます</div>
+        <div class="controls">
+          <button class="btn secondary" id="prev-btn" disabled> 戻る </button>
+          <button class="btn secondary" id="reveal-btn" disabled>確認</button>
+          <button class="btn" id="next-btn" disabled> 次へ </button>
+        </div>
+        <div class="status" id="status">マニフェスト読み込み中...</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const regionNames = {
+      'Kanto': 'カントー',
+      'Johto': 'ジョウト',
+      'Hoenn': 'ホウエン',
+      'Sinnoh': 'シンオウ',
+      'Unova': 'イッシュ',
+      'Kalos': 'カロス',
+      'Alola': 'アローラ',
+      'Galar': 'ガラル',
+      'Paldea': 'パルデア',
+    };
+
+    const state = {
+      manifest: {},
+      selectedRegion: null,
+      current: null,
+      revealed: false,
+      lastId: null,
+      displayedIds: [],
+      currentIndex: -1,
+    };
+
+    const regionButtons = document.getElementById('region-buttons');
+    const regionIndicator = document.getElementById('region-indicator');
+    const imageFrame = document.getElementById('image-frame');
+    const nameBox = document.getElementById('name-box');
+    const revealBtn = document.getElementById('reveal-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const statusLine = document.getElementById('status');
+
+    async function loadManifest() {
+      try {
+        const res = await fetch('manifest.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('manifest fetch failed');
+        const raw = await res.json();
+
+        // 全国 = 全地方をフラットにした疑似地方
+        const allEntries = Object.values(raw).flat();
+        state.manifest = { 全国: allEntries, ...raw };
+        buildRegionButtons();
+        statusLine.textContent = '地方を選んで開始してください';
+      } catch (e) {
+        statusLine.textContent = 'manifest.json の読み込みに失敗しました。サーバで配信されているか確認してください。';
+        console.error(e);
+      }
+    }
+
+    function buildRegionButtons() {
+      const regions = ['全国', ...Object.keys(state.manifest).filter((r) => r !== '全国')];
+      regionButtons.innerHTML = '';
+      regions.forEach((region) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn secondary';
+        btn.textContent = regionNames[region] || region;
+        btn.dataset.region = region;
+        btn.onclick = () => selectRegion(region);
+        regionButtons.appendChild(btn);
+      });
+    }
+
+    function selectRegion(region) {
+      state.selectedRegion = region;
+      state.displayedIds = [];
+      state.currentIndex = -1;
+      
+      // 全ボタンからactiveクラスを削除
+      document.querySelectorAll('.regions .btn').forEach(btn => btn.classList.remove('active'));
+      // 選択されたボタンにactiveクラスを追加
+      document.querySelector(`.regions .btn[data-region="${region}"]`)?.classList.add('active');
+      
+      const displayName = regionNames[region] || region;
+      regionIndicator.textContent = `${displayName}地方`;
+      statusLine.textContent = 'ランダムに選択しています...';
+      pickRandom();
+    }
+
+    function pickRandom() {
+      const pool = state.manifest[state.selectedRegion] || [];
+      const totalCount = pool.length;
+      
+      // 「戻る」を押した後に「次へ」を押した場合、次の履歴を表示
+      if (state.currentIndex < state.displayedIds.length - 1) {
+        state.currentIndex++;
+        const nextId = state.displayedIds[state.currentIndex];
+        const entry = pool.find(item => item.id === nextId);
+        if (entry) {
+          state.current = entry;
+          state.revealed = false;
+          setImage(entry);
+          updateControls();
+          statusLine.innerHTML = `画像を表示しました<br><br><span style="font-size: 64px; font-weight: 700;">${state.currentIndex + 1}/${totalCount}</span>`;
+          return;
+        }
+      }
+      
+      // 新しい画像をランダムに選択
+      const availablePool = pool.filter(item => !state.displayedIds.includes(item.id));
+      
+      if (!availablePool.length) {
+        if (pool.length > 0) {
+          statusLine.textContent = `${regionNames[state.selectedRegion] || state.selectedRegion}地方の対策が終わりました！\n地方を変更して再度始めてください`;
+          showGotcha();
+        } else {
+          statusLine.textContent = `${regionNames[state.selectedRegion] || state.selectedRegion}地方に画像がありません`;
+          setImage(null);
+        }
+        return;
+      }
+      
+      let candidate = availablePool[Math.floor(Math.random() * availablePool.length)];
+      state.current = candidate;
+      state.lastId = candidate.id;
+      state.revealed = false;
+      state.displayedIds.push(candidate.id);
+      state.currentIndex = state.displayedIds.length - 1;
+      setImage(candidate);
+      updateControls();
+      statusLine.innerHTML = `画像を表示しました<br><br><span style="font-size: 64px; font-weight: 700;">${state.currentIndex + 1}/${totalCount}</span>`;
+    }
+
+    function setImage(entry) {
+      imageFrame.innerHTML = '';
+      if (!entry) {
+        const span = document.createElement('span');
+        span.className = 'placeholder';
+        span.textContent = '画像がありません';
+        imageFrame.appendChild(span);
+        nameBox.textContent = '○○';
+        return;
+      }
+      // 既に表示されている画像の場合は、displayedIdsに追加しない
+      const img = document.createElement('img');
+      img.src = entry.url.startsWith('http') ? entry.url : `./${entry.url}`;
+      img.alt = '画像';
+      imageFrame.appendChild(img);
+      nameBox.textContent = '○○';
+    }
+
+    function goBack() {
+      if (state.currentIndex <= 0) return;
+      state.currentIndex--;
+      const prevId = state.displayedIds[state.currentIndex];
+      const pool = state.manifest[state.selectedRegion] || [];
+      const entry = pool.find(item => item.id === prevId);
+      if (entry) {
+        state.current = entry;
+        state.revealed = false;
+        setImage(entry);
+        updateControls();
+        const totalCount = pool.length;
+        statusLine.innerHTML = `画像を表示しました<br><br><span style="font-size: 64px; font-weight: 700;">${state.currentIndex + 1}/${totalCount}</span>`;
+      }
+    }
+    function showGotcha() {
+      imageFrame.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = './image/GOTCHA！.png';
+      img.alt = 'GOTCHA';
+      imageFrame.appendChild(img);
+      nameBox.textContent = '○○';
+    }
+    function reveal() {
+      if (!state.current) return;
+      state.revealed = true;
+      const totalCount = state.manifest[state.selectedRegion]?.length || 0;
+      nameBox.textContent = state.current.name || '名前情報なし';
+      statusLine.innerHTML = `名前を表示しました<br><br><span style="font-size: 64px; font-weight: 700;">${state.currentIndex + 1}/${totalCount}</span>`;
+      updateControls();
+    }
+
+    function updateControls() {
+      const enabled = !!state.current;
+      revealBtn.disabled = !enabled || state.revealed;
+      nextBtn.disabled = !enabled;
+      prevBtn.disabled = !enabled || state.currentIndex <= 0;
+    }
+
+    revealBtn.addEventListener('click', reveal);
+    nextBtn.addEventListener('click', pickRandom);
+    prevBtn.addEventListener('click', goBack);
+
+    loadManifest();
+  </script>
+</body>
+</html>
