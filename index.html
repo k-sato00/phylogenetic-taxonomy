@@ -279,8 +279,10 @@
         if (!res.ok) throw new Error('manifest fetch failed');
         const raw = await res.json();
 
-        // 全国 = 全地方をフラットにした疑似地方
-        const allEntries = Object.values(raw).flat();
+        // 全国 = RegionForm以外のすべての地方をフラットにした疑似地方
+        const allEntries = Object.entries(raw)
+          .filter(([key]) => key !== 'RegionForm')
+          .flatMap(([, entries]) => entries);
         state.manifest = { 全国: allEntries, ...raw };
         buildRegionButtons();
         statusLine.textContent = '地方を選んで開始してください';
