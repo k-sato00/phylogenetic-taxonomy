@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0", minimum-scale=0.1, maximum-scale=3.0, user-scalable=yes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, maximum-scale=3.0, user-scalable=yes" />
   <meta name="robots" content="noindex">
   <title>【試験対策】携帯獣系統分類学</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,7 +153,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-left: 0px;
+      margin-left: 0;
     }
     .pill {
       display: inline-flex;
@@ -213,7 +213,7 @@
     <header>
       <div>
         <h1>タマムシ大学 携帯獣学部<br>携帯獣系統分類学　試験対策</h1>
-        <p class="subtitle">地方を選択 → 名前を確認 → 次へ<br>※リージョンフォーム、雌雄等の姿違いは含まれていません<br><a href="https://zukan.pokemon.co.jp/" target="_blank" rel="noopener noreferrer">ずかんはこちら</a></p>
+        <p class="subtitle">地方を選択 → 名前を確認 → 次へ<br>※フォルム、雌雄等の姿違いは含まれていません<br><a href="https://zukan.pokemon.co.jp/" target="_blank" rel="noopener noreferrer">ずかんはこちら</a></p>
       </div>
       <div class="pill" id="region-indicator">地方未選択</div>
     </header>
@@ -250,6 +250,8 @@
       'Alola': 'アローラ',
       'Galar': 'ガラル',
       'Paldea': 'パルデア',
+      'WW': 'WW',
+      'RegionForm': 'Region',
     };
 
     const state = {
@@ -324,8 +326,8 @@
       // 「戻る」を押した後に「次へ」を押した場合、次の履歴を表示
       if (state.currentIndex < state.displayedIds.length - 1) {
         state.currentIndex++;
-        const nextId = state.displayedIds[state.currentIndex];
-        const entry = pool.find(item => item.id === nextId);
+        const nextIndex = state.displayedIds[state.currentIndex];
+        const entry = pool[nextIndex];
         if (entry) {
           state.current = entry;
           state.revealed = false;
@@ -336,10 +338,15 @@
         }
       }
       
-      // 新しい画像をランダムに選択
-      const availablePool = pool.filter(item => !state.displayedIds.includes(item.id));
+      // 新しい画像をランダムに選択: 利用可能なインデックスのリストを作成
+      const availableIndices = [];
+      for (let i = 0; i < pool.length; i++) {
+        if (!state.displayedIds.includes(i)) {
+          availableIndices.push(i);
+        }
+      }
       
-      if (!availablePool.length) {
+      if (availableIndices.length === 0) {
         if (pool.length > 0) {
           statusLine.textContent = `${regionNames[state.selectedRegion] || state.selectedRegion}地方の対策が終わりました！\n地方を変更して再度始めてください`;
           showGotcha();
@@ -350,11 +357,15 @@
         return;
       }
       
-      let candidate = availablePool[Math.floor(Math.random() * availablePool.length)];
+      // 利用可能なインデックスからランダムに選択
+      const randomIdx = Math.floor(Math.random() * availableIndices.length);
+      const candidateIdx = availableIndices[randomIdx];
+      const candidate = pool[candidateIdx];
+      
       state.current = candidate;
       state.lastId = candidate.id;
       state.revealed = false;
-      state.displayedIds.push(candidate.id);
+      state.displayedIds.push(candidateIdx);
       state.currentIndex = state.displayedIds.length - 1;
       setImage(candidate);
       updateControls();
@@ -382,9 +393,9 @@
     function goBack() {
       if (state.currentIndex <= 0) return;
       state.currentIndex--;
-      const prevId = state.displayedIds[state.currentIndex];
+      const prevIndex = state.displayedIds[state.currentIndex];
       const pool = state.manifest[state.selectedRegion] || [];
-      const entry = pool.find(item => item.id === prevId);
+      const entry = pool[prevIndex];
       if (entry) {
         state.current = entry;
         state.revealed = false;
@@ -426,8 +437,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
