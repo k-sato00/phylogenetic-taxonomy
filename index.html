@@ -213,7 +213,7 @@
     <header>
       <div>
         <h1>タマムシ大学 携帯獣学部<br>携帯獣系統分類学　試験対策</h1>
-        <p class="subtitle">地方を選択 → 名前を確認 → 次へ<br>※フォルム、雌雄等の姿違いは含まれていません<br><a href="https://zukan.pokemon.co.jp/" target="_blank" rel="noopener noreferrer">ずかんはこちら</a></p>
+        <p class="subtitle">地方を選択 → 名前を確認 → 次へ<br><a href="https://zukan.pokemon.co.jp/" target="_blank" rel="noopener noreferrer">ずかんはこちら</a></p>
       </div>
       <div class="pill" id="region-indicator">地方未選択</div>
     </header>
@@ -249,10 +249,32 @@
       'Kalos': 'カロス',
       'Alola': 'アローラ',
       'Galar': 'ガラル',
+      'Hisui': 'ヒスイ',
       'Paldea': 'パルデア',
-      'WW': 'WW',
-      'RegionForm': 'Region',
+      'WW': '風波',
+      'FormeChange': 'Forme',
+      'MegaEvolution': 'MegaEvo',
+      'RegionalForm': 'Regional',
+      'Gigantamax': 'G-MAX',
     };
+
+    const regionOrder = [
+      'Kanto',
+      'Johto',
+      'Hoenn',
+      'Sinnoh',
+      'Unova',
+      'Kalos',
+      'Alola',
+      'Galar',
+      'Hisui',
+      'Paldea',
+      'WW',
+      'FormeChange',
+      'MegaEvolution',
+      'RegionalForm',
+      'Gigantamax',
+    ];
 
     const state = {
       manifest: {},
@@ -279,9 +301,9 @@
         if (!res.ok) throw new Error('manifest fetch failed');
         const raw = await res.json();
 
-        // 全国 = RegionForm以外のすべての地方をフラットにした疑似地方
+        // 全国 = (FormeChange/MegaEvolution/RegionalForm/Gigantamax)以外をフラット化した疑似地方
         const allEntries = Object.entries(raw)
-          .filter(([key]) => key !== 'RegionForm')
+          .filter(([key]) => key !== 'FormeChange' && key !== 'MegaEvolution' && key !== 'RegionalForm' && key !== 'Gigantamax')
           .flatMap(([, entries]) => entries);
         state.manifest = { 全国: allEntries, ...raw };
         buildRegionButtons();
