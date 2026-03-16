@@ -75,7 +75,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 10px;
-      margin-top: 25px;
+      margin: 0;
     }
     .btn {
       cursor: pointer;
@@ -195,11 +195,6 @@
       font-size: 20px;
       white-space: pre-wrap;
     }
-    .panel > strong {
-      font-size: 22px;
-      display: block;
-      margin-bottom: 12px;
-    }
     @media (max-width: 768px) {
       body { padding: 16px; }
       .app { padding: 20px; }
@@ -213,28 +208,27 @@
     <header>
       <div>
         <h1>タマムシ大学 携帯獣学部<br>携帯獣系統分類学　試験対策</h1>
-        <p class="subtitle">地方を選択 → 名前を確認 → 次へ<br><a href="https://zukan.pokemon.co.jp/" target="_blank" rel="noopener noreferrer">ずかんはこちら</a></p>
+        <p class="subtitle">対策したい項目を選択 → 名前を確認 → 進む<br><a href="https://zukan.pokemon.co.jp/" target="_blank" rel="noopener noreferrer">ずかんはこちら</a></p>
       </div>
-      <div class="pill" id="region-indicator">地方未選択</div>
+      <div class="pill" id="region-indicator">未選択</div>
     </header>
 
     <section class="panel">
-      <strong>地方を選択</strong>
       <div class="regions" id="region-buttons"></div>
     </section>
 
     <section class="panel image-area" aria-live="polite">
       <div class="frame" id="image-frame">
-        <span class="placeholder">地方を選択すると画像が表示されます</span>
+        <span class="placeholder">画像が表示されます</span>
       </div>
       <div class="info">
-        <div class="name-box" id="name-box">ここに名前が表示されます</div>
+        <div class="name-box" id="name-box">名前が表示されます</div>
         <div class="controls">
           <button class="btn secondary" id="prev-btn" disabled> 戻る </button>
           <button class="btn secondary" id="reveal-btn" disabled>確認</button>
-          <button class="btn" id="next-btn" disabled> 次へ </button>
+          <button class="btn" id="next-btn" disabled> 進む </button>
         </div>
-        <div class="status" id="status">マニフェスト読み込み中...</div>
+        <div class="status" id="status">読み込み中...</div>
       </div>
     </section>
   </div>
@@ -307,7 +301,7 @@
           .flatMap(([, entries]) => entries);
         state.manifest = { 全国: allEntries, ...raw };
         buildRegionButtons();
-        statusLine.textContent = '地方を選んで開始してください';
+        statusLine.textContent = '項目を選んで開始してください';
       } catch (e) {
         statusLine.textContent = 'manifest.json の読み込みに失敗しました。サーバで配信されているか確認してください。';
         console.error(e);
@@ -338,7 +332,8 @@
       document.querySelector(`.regions .btn[data-region="${region}"]`)?.classList.add('active');
       
       const displayName = regionNames[region] || region;
-      regionIndicator.textContent = `${displayName}地方`;
+      const withChiho = ['Kanto', 'Johto', 'Hoenn', 'Sinnoh', 'Unova', 'Kalos', 'Alola', 'Galar', 'Hisui', 'Paldea', 'WW'];
+      regionIndicator.textContent = withChiho.includes(region) ? `${displayName}地方` : `${displayName}`;
       statusLine.textContent = 'ランダムに選択しています...';
       pickRandom();
     }
@@ -347,7 +342,7 @@
       const pool = state.manifest[state.selectedRegion] || [];
       const totalCount = pool.length;
       
-      // 「戻る」を押した後に「次へ」を押した場合、次の履歴を表示
+      // 「戻る」を押した後に「進む」を押した場合、次の履歴を表示
       if (state.currentIndex < state.displayedIds.length - 1) {
         state.currentIndex++;
         const nextIndex = state.displayedIds[state.currentIndex];
@@ -372,10 +367,10 @@
       
       if (availableIndices.length === 0) {
         if (pool.length > 0) {
-          statusLine.textContent = `${regionNames[state.selectedRegion] || state.selectedRegion}地方の対策が終わりました！\n地方を変更して再度始めてください`;
+          statusLine.textContent = `${regionNames[state.selectedRegion] || state.selectedRegion}の対策が終わりました！`;
           showGotcha();
         } else {
-          statusLine.textContent = `${regionNames[state.selectedRegion] || state.selectedRegion}地方に画像がありません`;
+          statusLine.textContent = `${regionNames[state.selectedRegion] || state.selectedRegion}に画像がありません`;
           setImage(null);
         }
         return;
